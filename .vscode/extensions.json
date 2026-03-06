@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "csharpier.csharpier-vscode",
+    "esbenp.prettier-vscode",
+    "editorconfig.editorconfig",
+    "github.vscode-github-actions",
+    "ms-dotnettools.csdevkit"
+  ]
+}

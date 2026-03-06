@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [emby]
+    tags: [v*]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Check C# formatting
+        run: dotnet csharpier check .
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Check Prettier formatting
+        run: npx prettier --check .
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release
+
+      - name: Publish
+        run: dotnet publish emby-ani-sync/emby-ani-sync.csproj --no-build --configuration Release --output publish
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: emby-ani-sync
+          path: publish/
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: emby-ani-sync
+          path: artifact
+
+      - name: Zip release
+        run: cd artifact && zip ../emby-ani-sync.zip emby-ani-sync.dll
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: emby-ani-sync.zip
+          generate_release_notes: true

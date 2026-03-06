@@ -3,5 +3,7 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
-jellyfin-ani-sync/builds/
+emby-ani-sync/builds/
 /.idea/
+node_modules/
+.husky/_/

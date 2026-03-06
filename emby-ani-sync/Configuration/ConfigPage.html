@@ -1,0 +1,592 @@
+<div
+  id="TemplateConfigPage"
+  data-role="page"
+  class="page type-interior pluginConfigurationPage withTabs"
+  data-require="emby-input,emby-button,emby-select,emby-checkbox"
+  data-controller="__plugin/AniSync_ConfigPageJs"
+>
+  <style>
+    .aniSyncLayout {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .aniSyncPanel {
+      border: 1px solid
+        hsla(var(--theme-text-color-hue), var(--theme-text-color-saturation), var(--theme-text-color-lightness), 0.12);
+      border-radius: 12px;
+      padding: 1.15rem 1.2rem;
+      background: hsla(
+        var(--card-background-hue),
+        var(--card-background-saturation),
+        var(--card-background-lightness),
+        var(--card-background-alpha)
+      );
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-text-color-alpha)
+      );
+    }
+
+    .aniSyncPanelHero {
+      border-left: 4px solid
+        hsla(
+          var(--theme-primary-color-hue),
+          var(--theme-primary-color-saturation),
+          var(--theme-primary-color-lightness),
+          0.72
+        );
+    }
+
+    .aniSyncPanel h2,
+    .aniSyncPanel h3,
+    .aniSyncPanel p {
+      margin-top: 0;
+    }
+
+    .aniSyncEyebrow {
+      margin-bottom: 0.35rem;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-secondary-text-color-alpha)
+      );
+    }
+
+    .aniSyncFieldStack,
+    .aniSyncDisclosureBody {
+      display: grid;
+      gap: 1rem;
+      max-width: 48rem;
+    }
+
+    .aniSyncSteps {
+      display: grid;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .aniSyncStep {
+      display: flex;
+      gap: 0.85rem;
+      align-items: flex-start;
+      padding: 0.85rem 0.95rem;
+      border: 1px solid
+        hsla(var(--theme-text-color-hue), var(--theme-text-color-saturation), var(--theme-text-color-lightness), 0.08);
+      border-radius: 10px;
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.04
+      );
+    }
+
+    .aniSyncStepIndex {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.85rem;
+      height: 1.85rem;
+      border-radius: 999px;
+      flex-shrink: 0;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid
+        hsla(
+          var(--theme-primary-color-hue),
+          var(--theme-primary-color-saturation),
+          var(--theme-primary-color-lightness),
+          0.28
+        );
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.18
+      );
+    }
+
+    .aniSyncStep strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      font-size: 0.96rem;
+    }
+
+    .aniSyncStep p,
+    .aniSyncSubtle,
+    .aniSyncMuted {
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-secondary-text-color-alpha)
+      );
+      font-size: 0.92rem;
+    }
+
+    .aniSyncNotice {
+      margin-top: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid
+        hsla(var(--theme-text-color-hue), var(--theme-text-color-saturation), var(--theme-text-color-lightness), 0.12);
+      color: inherit;
+    }
+
+    .aniSyncNotice.is-hidden {
+      display: none;
+    }
+
+    .aniSyncNotice-info,
+    .aniSyncNotice-success {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncNotice-warning {
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.08
+      );
+      border-color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.18
+      );
+    }
+
+    .aniSyncNotice-error {
+      background: hsla(0, 70%, 55%, 0.14);
+      border-color: hsla(0, 70%, 55%, 0.35);
+    }
+
+    .aniSyncPill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      color: inherit;
+    }
+
+    .aniSyncPill-info,
+    .aniSyncPill-success {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncPill-warning {
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.08
+      );
+      border-color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.18
+      );
+    }
+
+    .aniSyncPill-error {
+      background: hsla(0, 70%, 55%, 0.14);
+      border-color: hsla(0, 70%, 55%, 0.35);
+    }
+
+    .aniSyncPanelHeader,
+    .aniSyncInlineActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .aniSyncInlineActions {
+      justify-content: flex-start;
+    }
+
+    .aniSyncFieldError {
+      display: block;
+      margin-top: 0.35rem;
+      color: hsla(0, 70%, 55%, 0.95);
+      font-size: 0.85rem;
+    }
+
+    .aniSyncHidden {
+      display: none !important;
+    }
+
+    .aniSyncReadonlyInput {
+      opacity: 0.92;
+    }
+
+    .aniSyncDisclosure {
+      margin: 0;
+    }
+
+    .aniSyncDisclosureSummary {
+      cursor: pointer;
+      list-style: none;
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .aniSyncDisclosureSummary::-webkit-details-marker {
+      display: none;
+    }
+
+    .aniSyncDisclosureSummary::after {
+      content: 'Show';
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-secondary-text-color-alpha)
+      );
+    }
+
+    .aniSyncDisclosure[open] .aniSyncDisclosureSummary::after {
+      content: 'Hide';
+    }
+
+    .aniSyncDisclosureBody {
+      margin-top: 1rem;
+    }
+  </style>
+  <div data-role="content">
+    <div class="content-primary aniSyncLayout">
+      <div id="navigationTabs" data-role="controlgroup" data-type="horizontal" class="localnav"></div>
+
+      <form id="TemplateConfigForm" class="aniSyncLayout">
+        <section class="aniSyncPanel aniSyncPanelHero" id="workflowCard">
+          <div class="aniSyncPanelHeader">
+            <div>
+              <p class="aniSyncEyebrow">Current setup target</p>
+              <h2 id="workflowTitle">Configure Ani-Sync</h2>
+              <p id="workflowSummary" class="aniSyncSubtle">
+                Everything below applies only to the currently selected provider and Emby user.
+              </p>
+            </div>
+            <span id="workflowStatusPill" class="aniSyncPill aniSyncPill-warning">Needs setup</span>
+          </div>
+
+          <div class="aniSyncFieldStack">
+            <div class="selectContainer">
+              <select is="emby-select" id="selectProvider" name="selectProvider" label="Provider"></select>
+            </div>
+            <div class="selectContainer">
+              <select is="emby-select" id="selectUser" name="selectUser" label="Emby user"></select>
+            </div>
+          </div>
+
+          <div class="aniSyncSteps">
+            <div class="aniSyncStep">
+              <span class="aniSyncStepIndex">1</span>
+              <div>
+                <strong id="workflowStepOneTitle">Provider setup</strong>
+                <p id="workflowStepOneText"></p>
+              </div>
+            </div>
+            <div class="aniSyncStep">
+              <span class="aniSyncStepIndex">2</span>
+              <div>
+                <strong id="workflowStepTwoTitle">Connect the selected user</strong>
+                <p id="workflowStepTwoText"></p>
+              </div>
+            </div>
+            <div class="aniSyncStep">
+              <span class="aniSyncStepIndex">3</span>
+              <div>
+                <strong id="workflowStepThreeTitle">Choose sync scope</strong>
+                <p id="workflowStepThreeText"></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="aniSyncPanel" id="providerSettingsCard">
+          <div class="aniSyncPanelHeader">
+            <div>
+              <h3>Provider setup</h3>
+              <p class="aniSyncSubtle">These settings are for the selected provider only.</p>
+            </div>
+            <span id="providerConfigStatus" class="aniSyncPill aniSyncPill-warning">Needs setup</span>
+          </div>
+
+          <p id="providerSetupHint" class="aniSyncMuted"></p>
+
+          <div id="providerOauthSection" class="aniSyncFieldStack">
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="apiUrl">Public server URL (optional)</label>
+              <input id="apiUrl" name="callbackUrl" type="text" is="emby-input" />
+              <div class="fieldDescription">Leave blank to use the detected Emby address.</div>
+              <div class="fieldDescription" id="localApiUrl"></div>
+              <div class="fieldDescription" id="userAddress"></div>
+            </div>
+
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="generalCallbackUrlInput">OAuth callback URL</label>
+              <input id="generalCallbackUrlInput" type="text" is="emby-input" class="aniSyncReadonlyInput" readonly />
+              <div class="aniSyncInlineActions">
+                <button is="emby-button" type="button" id="copyCallbackUrlButton" class="raised">
+                  <span>Copy callback URL</span>
+                </button>
+              </div>
+              <div class="fieldDescription">Register this URL in the provider app.</div>
+            </div>
+          </div>
+
+          <div id="providerCredentialSection" class="aniSyncFieldStack">
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="clientId" id="clientIdLabel">Client ID</label>
+              <input id="clientId" name="clientId" type="text" is="emby-input" />
+              <span id="providerClientIdError" class="aniSyncFieldError"></span>
+              <div id="clientIdDescription" class="fieldDescription"></div>
+            </div>
+            <div class="inputContainer" id="clientSecretContainer">
+              <label class="inputLabel inputLabelUnfocused" for="clientSecret" id="clientSecretLabel"
+                >Client Secret</label
+              >
+              <input id="clientSecret" name="clientSecret" type="password" is="emby-input" />
+              <span id="providerClientSecretError" class="aniSyncFieldError"></span>
+              <div id="clientSecretDescription" class="fieldDescription"></div>
+            </div>
+          </div>
+
+          <div class="inputContainer aniSyncHidden" id="shikimoriAppNameContainer">
+            <label class="inputLabel inputLabelUnfocused" for="shikimoriAppName">Shikimori app name</label>
+            <input id="shikimoriAppName" name="shikimoriAppName" type="text" is="emby-input" />
+            <div class="fieldDescription">Sent as the User-Agent for Shikimori requests.</div>
+          </div>
+
+          <div class="checkboxContainer checkboxContainer-withDescription aniSyncHidden" id="simklUpdateAllContainer">
+            <label class="emby-checkbox-label">
+              <input id="simklUpdateAll" name="simklUpdateAll" type="checkbox" is="emby-checkbox" />
+              <span>Update every Simkl episode up to the current point</span>
+            </label>
+            <div class="fieldDescription">Enable this only if you want full episode catch-up updates in Simkl.</div>
+          </div>
+
+          <div id="providerCardNotice" class="aniSyncNotice is-hidden"></div>
+        </section>
+
+        <section class="aniSyncPanel" id="userConnectionCard">
+          <div class="aniSyncPanelHeader">
+            <div>
+              <h3>Selected user connection</h3>
+              <p class="aniSyncSubtle">Connect the selected Emby user for the selected provider.</p>
+            </div>
+            <span id="connectionStatusPill" class="aniSyncPill aniSyncPill-warning">Not connected</span>
+          </div>
+
+          <p id="connectionStatusText" class="aniSyncSubtle"></p>
+
+          <div id="userCredentialSection" class="aniSyncFieldStack aniSyncHidden">
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="userClientId" id="userClientIdLabel">Username</label>
+              <input id="userClientId" type="text" is="emby-input" />
+              <span id="userClientIdError" class="aniSyncFieldError"></span>
+              <div id="userClientIdDescription" class="fieldDescription"></div>
+            </div>
+            <div class="inputContainer" id="userClientSecretContainer">
+              <label class="inputLabel inputLabelUnfocused" for="userClientSecret" id="userClientSecretLabel"
+                >Password</label
+              >
+              <input id="userClientSecret" type="password" is="emby-input" />
+              <span id="userClientSecretError" class="aniSyncFieldError"></span>
+              <div id="userClientSecretDescription" class="fieldDescription"></div>
+            </div>
+          </div>
+
+          <p id="connectionHelpText" class="aniSyncMuted"></p>
+
+          <div class="aniSyncInlineActions">
+            <button is="emby-button" type="button" id="authorizeDevice" class="raised">
+              <span>Connect user</span>
+            </button>
+            <button is="emby-button" type="button" id="testAuthentication" class="raised">
+              <span>Test connection</span>
+            </button>
+            <button is="emby-button" type="button" id="deauthenticate" class="raised">
+              <span>Disconnect</span>
+            </button>
+            <a id="authorizeLink" class="emby-button raised aniSyncHidden" target="_blank">Open authorization page</a>
+          </div>
+
+          <div id="connectionCardNotice" class="aniSyncNotice is-hidden"></div>
+        </section>
+
+        <section class="aniSyncPanel" id="syncPreferencesCard">
+          <div class="aniSyncPanelHeader">
+            <div>
+              <h3>Sync scope for the selected user</h3>
+              <p class="aniSyncSubtle">Choose what Ani-Sync is allowed to touch for this user.</p>
+            </div>
+          </div>
+
+          <div class="checkboxContainer checkboxContainer-withDescription">
+            <label class="emby-checkbox-label">
+              <input id="PlanToWatchOnly" name="PlanToWatchOnly" type="checkbox" is="emby-checkbox" />
+              <span>Only change anime already in Plan to Watch</span>
+            </label>
+          </div>
+
+          <div class="checkboxContainer checkboxContainer-withDescription">
+            <label class="emby-checkbox-label">
+              <input id="RewatchCompleted" name="RewatchCompleted" type="checkbox" is="emby-checkbox" />
+              <span>Automatically set completed shows as rewatching</span>
+            </label>
+            <div class="fieldDescription">Useful if the user often rewatches completed shows.</div>
+          </div>
+
+          <div>
+            <h3 class="checkboxListLabel">Libraries to monitor</h3>
+            <div id="libraries" class="paperList checkboxList checkboxList-paperList"></div>
+            <div class="fieldDescription">Leave everything unchecked to monitor every library the user can access.</div>
+          </div>
+        </section>
+
+        <section class="aniSyncPanel" id="serverSettingsCard">
+          <div class="aniSyncPanelHeader">
+            <div>
+              <h3>Server defaults</h3>
+              <p class="aniSyncSubtle">
+                Change these only if you need a custom redirect, ARM endpoint, or cache location.
+              </p>
+            </div>
+          </div>
+
+          <div class="aniSyncFieldStack">
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="callbackRedirectUrlInput"
+                >Post-auth redirect URL</label
+              >
+              <input id="callbackRedirectUrlInput" type="text" is="emby-input" />
+              <div id="callbackRedirectUrlDescription" class="fieldDescription"></div>
+            </div>
+
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="armServerBaseUrlInput"
+                >Custom ARM server base URL</label
+              >
+              <input id="armServerBaseUrlInput" type="text" is="emby-input" />
+              <div class="fieldDescription">Optional override for the default ARM service.</div>
+            </div>
+
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="animeListSaveLocation">Anime list save location</label>
+              <input id="animeListSaveLocation" name="animeListSaveLocation" type="text" is="emby-input" />
+              <div class="fieldDescription">Optional writable folder for the Ani-Sync cache.</div>
+              <div class="aniSyncInlineActions">
+                <button is="emby-button" type="button" id="testAnimeListSaveLocation" class="raised">
+                  <span>Test save location</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div id="serverCardNotice" class="aniSyncNotice is-hidden"></div>
+        </section>
+
+        <section class="aniSyncPanel" id="advancedSettingsCard">
+          <details class="aniSyncDisclosure">
+            <summary class="aniSyncDisclosureSummary">
+              <span>Advanced behavior</span>
+              <span class="aniSyncSubtle">Optional server-wide settings that are not needed for most setups.</span>
+            </summary>
+
+            <div class="aniSyncDisclosureBody">
+              <div class="checkboxContainer checkboxContainer-withDescription">
+                <label class="emby-checkbox-label">
+                  <input id="enableUserPages" name="enableUserPages" type="checkbox" is="emby-checkbox" />
+                  <span>Enable self-service user pages</span>
+                </label>
+                <div class="fieldDescription">Requires an Emby restart after saving.</div>
+              </div>
+
+              <div class="checkboxContainer checkboxContainer-withDescription">
+                <label class="emby-checkbox-label">
+                  <input
+                    id="watchedTickboxUpdatesProvider"
+                    name="watchedTickboxUpdatesProvider"
+                    type="checkbox"
+                    is="emby-checkbox"
+                  />
+                  <span>Send watched toggle updates to providers</span>
+                </label>
+                <div class="fieldDescription">Disable this if provider updates ever look unreliable.</div>
+              </div>
+
+              <div class="checkboxContainer checkboxContainer-withDescription">
+                <label class="emby-checkbox-label">
+                  <input id="UpdateNsfw" name="UpdateNsfw" type="checkbox" is="emby-checkbox" />
+                  <span>Allow NSFW anime updates</span>
+                </label>
+              </div>
+
+              <div class="inputContainer">
+                <label class="inputLabel inputLabelUnfocused" for="linkTimeExpire"
+                  >Authentication link expiry (minutes)</label
+                >
+                <input id="linkTimeExpire" type="text" is="emby-input" />
+                <div class="fieldDescription">
+                  How long an OAuth approval can stay pending before Ani-Sync rejects it.
+                </div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <section class="aniSyncPanel">
+          <div class="aniSyncInlineActions">
+            <button is="emby-button" type="submit" id="saveConfigButton" class="raised button-submit emby-button">
+              <span>Save configuration</span>
+            </button>
+            <span class="aniSyncMuted">Connect auto-saves first if the latest provider settings are required.</span>
+          </div>
+          <div id="saveStatusNotice" class="aniSyncNotice is-hidden"></div>
+        </section>
+      </form>
+    </div>
+  </div>
+</div>

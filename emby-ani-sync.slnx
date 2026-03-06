@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="emby-ani-sync-unit-tests/emby-ani-sync-unit-tests.csproj" />
+  <Project Path="emby-ani-sync/emby-ani-sync.csproj" />
+</Solution>

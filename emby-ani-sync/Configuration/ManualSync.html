@@ -1,0 +1,311 @@
+<div
+  id="ManualSyncConfigPage"
+  data-role="page"
+  class="page type-interior pluginConfigurationPage withTabs"
+  data-require="emby-input,emby-button,emby-select,emby-checkbox"
+  data-controller="__plugin/AniSync_ManualSyncJs"
+>
+  <style>
+    .aniSyncLayout {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .aniSyncPanel {
+      border: 1px solid
+        hsla(var(--theme-text-color-hue), var(--theme-text-color-saturation), var(--theme-text-color-lightness), 0.12);
+      border-radius: 12px;
+      padding: 1rem;
+      background: hsla(
+        var(--card-background-hue),
+        var(--card-background-saturation),
+        var(--card-background-lightness),
+        var(--card-background-alpha)
+      );
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-text-color-alpha)
+      );
+    }
+
+    .aniSyncPanel h2,
+    .aniSyncPanel h3,
+    .aniSyncPanel p {
+      margin-top: 0;
+    }
+
+    .aniSyncGrid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .aniSyncNotice {
+      margin-top: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid
+        hsla(var(--theme-text-color-hue), var(--theme-text-color-saturation), var(--theme-text-color-lightness), 0.12);
+      color: inherit;
+    }
+
+    .aniSyncNotice.is-hidden {
+      display: none;
+    }
+
+    .aniSyncNotice-info {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncNotice-success {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncNotice-warning {
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.08
+      );
+      border-color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.18
+      );
+    }
+
+    .aniSyncNotice-error {
+      background: hsla(0, 70%, 55%, 0.14);
+      border-color: hsla(0, 70%, 55%, 0.35);
+    }
+
+    .aniSyncStatusRow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .aniSyncPill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      color: inherit;
+    }
+
+    .aniSyncPill-info {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncPill-success {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncPill-warning {
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.08
+      );
+      border-color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.18
+      );
+    }
+
+    .aniSyncPill-error {
+      background: hsla(0, 70%, 55%, 0.14);
+      border-color: hsla(0, 70%, 55%, 0.35);
+    }
+
+    .aniSyncStatusMeta {
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-secondary-text-color-alpha)
+      );
+      font-size: 0.92rem;
+    }
+
+    .aniSyncProgress {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.12
+      );
+    }
+
+    .aniSyncProgressBar {
+      width: 0;
+      height: 100%;
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.9
+      );
+      transition: width 0.2s ease;
+    }
+
+    .aniSyncActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .aniSyncMuted {
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-secondary-text-color-alpha)
+      );
+    }
+  </style>
+  <div data-role="content">
+    <div class="content-primary aniSyncLayout">
+      <div id="navigationTabs" data-role="controlgroup" data-type="horizontal" class="localnav"></div>
+
+      <section class="aniSyncPanel">
+        <h2>Manual sync</h2>
+        <p>
+          Start a one-off sync and stay on this page while Ani-Sync reports what it is doing. You no longer need to
+          watch the server logs just to confirm that a run started.
+        </p>
+      </section>
+
+      <section class="aniSyncPanel">
+        <form id="ManualSyncConfigForm" class="aniSyncLayout">
+          <div class="aniSyncGrid">
+            <div class="inputContainer">
+              <div class="selectContainer">
+                <select is="emby-select" id="selectAction" name="selectAction" label="Sync direction">
+                  <option value="UpdateEmby">Update Emby with provider progress</option>
+                  <option value="UpdateProvider">Update provider with Emby progress</option>
+                </select>
+              </div>
+              <div class="fieldDescription" id="actionDescription">
+                Pull the selected provider progress into Emby for one user.
+              </div>
+            </div>
+            <div class="inputContainer">
+              <div class="selectContainer">
+                <select is="emby-select" id="selectSyncUser" name="selectUser" label="User"></select>
+              </div>
+              <div class="fieldDescription">
+                Choose the Emby user whose library or connected providers should be synchronized.
+              </div>
+            </div>
+            <div class="inputContainer">
+              <div class="selectContainer">
+                <select is="emby-select" id="selectSyncProvider" name="selectProvider" label="Provider"></select>
+              </div>
+              <div class="fieldDescription" id="providerDescription">
+                Only used when pulling provider progress into Emby.
+              </div>
+            </div>
+            <div class="inputContainer">
+              <div class="selectContainer">
+                <select is="emby-select" id="status" name="status" label="Provider status filter">
+                  <option value="Completed">Completed</option>
+                  <option value="Watching">Watching</option>
+                  <option value="Both">Completed and Watching</option>
+                </select>
+              </div>
+              <div class="fieldDescription" id="statusDescription">
+                Filter which entries should be imported from the provider.
+              </div>
+            </div>
+          </div>
+
+          <div class="aniSyncActions">
+            <button is="emby-button" type="button" id="run" class="raised button-submit emby-button">
+              <span>Run sync</span>
+            </button>
+            <span class="aniSyncMuted"
+              >You can leave and come back to this page; the current job status will resume while the tab stays
+              open.</span
+            >
+          </div>
+        </form>
+        <div id="manualSyncPageNotice" class="aniSyncNotice is-hidden"></div>
+      </section>
+
+      <section class="aniSyncPanel" id="manualSyncStatusPanel" style="display: none">
+        <div class="aniSyncStatusRow">
+          <span id="manualSyncStatusPill" class="aniSyncPill aniSyncPill-info">Queued</span>
+          <span id="manualSyncStatusMeta" class="aniSyncStatusMeta"></span>
+        </div>
+        <h3 id="manualSyncPhase">Waiting to start</h3>
+        <p id="manualSyncMessage" class="aniSyncMuted"></p>
+        <div class="aniSyncProgress" aria-hidden="true">
+          <div id="manualSyncProgressBar" class="aniSyncProgressBar"></div>
+        </div>
+        <p id="manualSyncProgressText" class="aniSyncMuted" style="margin-top: 0.75rem"></p>
+      </section>
+    </div>
+  </div>
+</div>

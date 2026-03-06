@@ -1,0 +1,9 @@
+bin/
+obj/
+node_modules/
+*.dll
+*.pdb
+*.slnx
+*.csproj
+*.cs
+emby-ani-sync/builds/
