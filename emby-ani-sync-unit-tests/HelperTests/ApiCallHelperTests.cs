@@ -25,12 +25,14 @@ namespace emby_ani_sync_unit_tests.HelperTests;
 
 public class ApiCallHelperTests
 {
-    private List<int> uniqueIdList;
+    private HashSet<int> uniqueIdList = null!;
+    private Random random = null!;
 
     [SetUp]
     public void Setup()
     {
-        uniqueIdList = new List<int>();
+        uniqueIdList = new HashSet<int>();
+        random = new Random(12345);
     }
 
     [Test]
@@ -158,7 +160,6 @@ public class ApiCallHelperTests
     public void KitsuConfirmRelatedAnimeExists()
     {
         List<KitsuSearch.KitsuAnime> mediaList = new List<KitsuSearch.KitsuAnime>();
-        List<int> idList = new List<int>();
         for (int i = 0; i < 10; i++)
         {
             mediaList.Add(GetKitsuAnime(true));
@@ -308,8 +309,6 @@ public class ApiCallHelperTests
 
     private ShikimoriAnime GetShikimoriAnime(bool createRelations)
     {
-        Random random = new Random();
-
         List<ShikimoriRelated> relatedAnime = new List<ShikimoriRelated>();
         if (createRelations)
         {
@@ -348,7 +347,6 @@ public class ApiCallHelperTests
 
     private AniListSearch.Media GetAniListMedia(bool createRelations)
     {
-        Random random = new Random();
         AniListSearch.MediaConnection mediaConnection = new AniListSearch.MediaConnection();
         if (createRelations)
         {
@@ -404,7 +402,6 @@ public class ApiCallHelperTests
 
     private KitsuSearch.KitsuAnime GetKitsuAnime(bool createRelations)
     {
-        Random random = new Random();
         KitsuSearch.MediaRelationships mediaRelationships = new KitsuSearch.MediaRelationships();
         if (createRelations)
         {
@@ -443,8 +440,6 @@ public class ApiCallHelperTests
 
     private AnnictSearch.AnnictAnime GetAnnictAnime()
     {
-        Random random = new Random();
-
         return new AnnictSearch.AnnictAnime
         {
             Id = random.Next(1, 100).ToString(),
@@ -461,7 +456,7 @@ public class ApiCallHelperTests
         {
             int randomInt = random.Next(start, end);
 
-            if (!uniqueIdList.Contains(randomInt))
+            if (uniqueIdList.Add(randomInt))
             {
                 return randomInt;
             }
