@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  pull_request:
+    branches: [emby]
   push:
     branches: [emby]
     tags: [v*]
@@ -43,14 +45,12 @@ jobs:
       - name: Test
         run: dotnet test --no-build --configuration Release
 
-      - name: Publish
-        run: dotnet publish emby-ani-sync/emby-ani-sync.csproj --no-build --configuration Release --output publish
-
-      - name: Upload artifact
+      - name: Upload release artifact
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: emby-ani-sync
-          path: publish/
+          path: emby-ani-sync/bin/Release/netstandard2.0/emby-ani-sync.dll
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
