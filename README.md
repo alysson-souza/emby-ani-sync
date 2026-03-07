@@ -22,10 +22,12 @@ Ani-Sync lets you synchronize your Emby anime watch progress to popular services
 2. Build the plugin with the following command:
 
 ```
-dotnet publish emby-ani-sync/emby-ani-sync.csproj --configuration Release --output bin
+dotnet build emby-ani-sync/emby-ani-sync.csproj --configuration Release
 ```
 
-3. Place all the DLL files from the `bin` directory into the `plugins/ani-sync` folder of your Emby install.
+3. Copy `emby-ani-sync/bin/Release/netstandard2.0/emby-ani-sync.dll` into your Emby `plugins` directory.
+
+Only the plugin DLL is required for installation. Emby provides the shared dependencies it needs at runtime.
 
 ## Services/providers
 
