@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [emby]
+  push:
+    branches: [emby]
+    tags: [v*]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Restore dotnet tools
+        run: dotnet tool restore
+
+      - name: Check C# formatting
+        run: dotnet csharpier check .
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Check Prettier formatting
+        run: npx prettier --check .
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release
+
+      - name: Stage release artifact
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          mkdir -p artifact
+          cp emby-ani-sync/bin/Release/netstandard2.0/emby-ani-sync.dll artifact/
+
+      - name: Upload release artifact
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: actions/upload-artifact@v4
+        with:
+          name: emby-ani-sync
+          path: artifact/emby-ani-sync.dll
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: emby-ani-sync
+          path: artifact
+
+      - name: Zip release
+        run: cd artifact && zip ../emby-ani-sync.zip emby-ani-sync.dll
+
+      - name: Resolve release notes
+        id: release_notes
+        run: |
+          notes_path=".github/release-notes/${GITHUB_REF_NAME}.md"
+          if [ -f "$notes_path" ]; then
+            echo "notes_path=$notes_path" >> "$GITHUB_OUTPUT"
+            echo "use_curated=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "use_curated=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub release with curated notes
+        if: steps.release_notes.outputs.use_curated == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: emby-ani-sync.zip
+          body_path: ${{ steps.release_notes.outputs.notes_path }}
+
+      - name: Create GitHub release with generated notes
+        if: steps.release_notes.outputs.use_curated != 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: emby-ani-sync.zip
+          generate_release_notes: true

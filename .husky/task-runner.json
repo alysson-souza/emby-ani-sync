@@ -1,0 +1,17 @@
+{
+  "$schema": "https://alirezanet.github.io/Husky.Net/schema.json",
+  "tasks": [
+    {
+      "name": "csharpier",
+      "command": "dotnet",
+      "args": ["csharpier", "check", "."],
+      "group": "pre-commit"
+    },
+    {
+      "name": "prettier",
+      "command": "npx",
+      "args": ["prettier", "--check", "."],
+      "group": "pre-commit"
+    }
+  ]
+}

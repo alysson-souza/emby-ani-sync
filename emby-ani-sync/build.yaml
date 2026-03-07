@@ -1,0 +1,18 @@
+---
+name: 'Ani-Sync'
+guid: 'c78f11cf-93e6-4423-8c42-d2c255b70e47'
+version: '1.0.0'
+targetAbi: '10.9.6.0'
+framework: 'net8.0'
+owner: 'alysson-souza'
+overview: 'Synchronize anime watch status'
+description: >
+  Synchronize anime watch status between Emby and anime tracking sites.
+category: 'General'
+artifacts:
+  - 'emby-ani-sync.dll'
+changelog: |1-
+  - First standalone Emby release of Ani-Sync.
+  - Added admin and optional self-service user pages for provider setup.
+  - Added manual sync actions with UI job status reporting.
+  - Improved anime matching and provider sync behavior.

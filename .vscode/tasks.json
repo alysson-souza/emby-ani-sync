@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["build"],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "test",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["test"],
+      "problemMatcher": "$msCompile",
+      "group": "test"
+    },
+    {
+      "label": "format:check",
+      "type": "shell",
+      "command": "dotnet csharpier check . && npx prettier --check .",
+      "problemMatcher": []
+    },
+    {
+      "label": "format",
+      "type": "shell",
+      "command": "dotnet csharpier . && npx prettier --write .",
+      "problemMatcher": []
+    },
+    {
+      "label": "extensions",
+      "type": "shell",
+      "command": "jq -r '.recommendations[]' .vscode/extensions.json | xargs -I {} code --install-extension {}",
+      "problemMatcher": []
+    }
+  ]
+}

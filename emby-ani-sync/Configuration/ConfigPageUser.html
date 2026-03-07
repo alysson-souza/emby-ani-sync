@@ -1,0 +1,748 @@
+<div
+  id="TemplateConfigPage"
+  data-role="page"
+  class="page type-interior"
+  data-require="emby-input,emby-button,emby-select,emby-checkbox"
+>
+  <style>
+    .aniSyncLayout {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .aniSyncPanel {
+      border: 1px solid
+        hsla(var(--theme-text-color-hue), var(--theme-text-color-saturation), var(--theme-text-color-lightness), 0.12);
+      border-radius: 12px;
+      padding: 1rem;
+      background: hsla(
+        var(--card-background-hue),
+        var(--card-background-saturation),
+        var(--card-background-lightness),
+        var(--card-background-alpha)
+      );
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-text-color-alpha)
+      );
+    }
+
+    .aniSyncPanel h1,
+    .aniSyncPanel h2,
+    .aniSyncPanel h3,
+    .aniSyncPanel p {
+      margin-top: 0;
+    }
+
+    .aniSyncGrid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .aniSyncNotice {
+      margin-top: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 10px;
+      border: 1px solid
+        hsla(var(--theme-text-color-hue), var(--theme-text-color-saturation), var(--theme-text-color-lightness), 0.12);
+      color: inherit;
+    }
+
+    .aniSyncNotice.is-hidden {
+      display: none;
+    }
+
+    .aniSyncNotice-info {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncNotice-success {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncNotice-warning {
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.08
+      );
+      border-color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.18
+      );
+    }
+
+    .aniSyncNotice-error {
+      background: hsla(0, 70%, 55%, 0.14);
+      border-color: hsla(0, 70%, 55%, 0.35);
+    }
+
+    .aniSyncPill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      color: inherit;
+    }
+
+    .aniSyncPill-info {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncPill-success {
+      background: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.12
+      );
+      border-color: hsla(
+        var(--theme-primary-color-hue),
+        var(--theme-primary-color-saturation),
+        var(--theme-primary-color-lightness),
+        0.28
+      );
+    }
+
+    .aniSyncPill-warning {
+      background: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.08
+      );
+      border-color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        0.18
+      );
+    }
+
+    .aniSyncPill-error {
+      background: hsla(0, 70%, 55%, 0.14);
+      border-color: hsla(0, 70%, 55%, 0.35);
+    }
+
+    .aniSyncPanelHeader,
+    .aniSyncInlineActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .aniSyncInlineActions {
+      justify-content: flex-start;
+    }
+
+    .aniSyncMuted {
+      color: hsla(
+        var(--theme-text-color-hue),
+        var(--theme-text-color-saturation),
+        var(--theme-text-color-lightness),
+        var(--theme-secondary-text-color-alpha)
+      );
+      font-size: 0.92rem;
+    }
+
+    .aniSyncFieldError {
+      display: block;
+      margin-top: 0.35rem;
+      color: hsla(0, 70%, 55%, 0.95);
+      font-size: 0.85rem;
+    }
+
+    .aniSyncHidden {
+      display: none !important;
+    }
+  </style>
+  <div data-role="content">
+    <div class="content-primary aniSyncLayout">
+      <section class="aniSyncPanel">
+        <h1>Ani-Sync</h1>
+        <p>
+          Connect your anime tracking account, choose which libraries Ani-Sync should watch, and keep your sync
+          preferences up to date.
+        </p>
+      </section>
+
+      <form id="TemplateConfigForm" class="aniSyncLayout">
+        <section class="aniSyncPanel">
+          <div class="aniSyncPanelHeader">
+            <div>
+              <h2>Provider connection</h2>
+              <p class="aniSyncMuted">Pick a provider and connect it to your Emby user account.</p>
+            </div>
+            <span id="connectionStatusPill" class="aniSyncPill aniSyncPill-warning">Not connected</span>
+          </div>
+
+          <div class="selectContainer">
+            <select is="emby-select" id="selectProvider" name="selectProvider" label="Provider"></select>
+          </div>
+          <p id="connectionSummary" class="aniSyncMuted"></p>
+
+          <div id="kitsuCredentials" class="aniSyncGrid aniSyncHidden">
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="username">Kitsu username</label>
+              <input id="username" name="username" type="text" is="emby-input" />
+              <span id="usernameError" class="aniSyncFieldError"></span>
+              <div class="fieldDescription">
+                Used only for the Kitsu password grant. Ani-Sync stores the returned token, not your password.
+              </div>
+            </div>
+            <div class="inputContainer">
+              <label class="inputLabel inputLabelUnfocused" for="password">Kitsu password</label>
+              <input id="password" name="password" type="password" is="emby-input" />
+              <span id="passwordError" class="aniSyncFieldError"></span>
+              <div class="fieldDescription">Needed only while Ani-Sync requests a token for your account.</div>
+            </div>
+          </div>
+
+          <div class="aniSyncInlineActions">
+            <button is="emby-button" type="button" id="authorizeDevice" class="raised">
+              <span>Connect account</span>
+            </button>
+            <button is="emby-button" type="button" id="testAuthentication" class="raised">
+              <span>Test connection</span>
+            </button>
+            <button is="emby-button" type="button" id="deauthenticate" class="raised">
+              <span>Disconnect</span>
+            </button>
+            <a id="authorizeLink" class="emby-button raised aniSyncHidden" target="_blank">Open authorization page</a>
+          </div>
+
+          <div id="connectionNotice" class="aniSyncNotice is-hidden"></div>
+        </section>
+
+        <section class="aniSyncPanel">
+          <div class="aniSyncPanelHeader">
+            <div>
+              <h2>Sync preferences</h2>
+              <p class="aniSyncMuted">These options only affect your own Ani-Sync behavior.</p>
+            </div>
+          </div>
+          <div class="checkboxContainer checkboxContainer-withDescription">
+            <label class="emby-checkbox-label">
+              <input id="PlanToWatchOnly" name="PlanToWatchOnly" type="checkbox" is="emby-checkbox" />
+              <span>Only change anime already in Plan to Watch</span>
+            </label>
+          </div>
+          <div class="checkboxContainer checkboxContainer-withDescription">
+            <label class="emby-checkbox-label">
+              <input id="RewatchCompleted" name="RewatchCompleted" type="checkbox" is="emby-checkbox" />
+              <span>Automatically set completed shows as rewatching</span>
+            </label>
+            <div class="fieldDescription">Useful when you restart a show or rewatch a movie you already completed.</div>
+          </div>
+          <div>
+            <h3 class="checkboxListLabel">Libraries to monitor</h3>
+            <div id="libraries" class="paperList checkboxList checkboxList-paperList"></div>
+            <div class="fieldDescription">
+              Leave everything unchecked to allow Ani-Sync to monitor every library you can access.
+            </div>
+          </div>
+        </section>
+
+        <section class="aniSyncPanel">
+          <div class="aniSyncInlineActions">
+            <button is="emby-button" type="submit" id="saveConfigButton" class="raised button-submit emby-button">
+              <span>Save preferences</span>
+            </button>
+            <span class="aniSyncMuted">Connection actions are separate from preference changes.</span>
+          </div>
+          <div id="saveStatusNotice" class="aniSyncNotice is-hidden"></div>
+        </section>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  var AniSyncUserPage = {
+    pendingAuthKey: 'aniSync.user.pendingAuth',
+  };
+
+  function initializeUserPage(common) {
+    var page = document;
+    var state = page.__aniSyncUserPageState;
+    if (!state) {
+      state = {
+        common: common,
+        currentUserId: null,
+        parameters: null,
+        userConfig: null,
+        pendingAuth: null,
+        initialized: false,
+      };
+      page.__aniSyncUserPageState = state;
+    }
+
+    state.common = common;
+    state.pendingAuth = common.getSessionValue(AniSyncUserPage.pendingAuthKey);
+
+    if (!state.initialized) {
+      bindUserPageEvents(page, state);
+      state.initialized = true;
+    }
+
+    Dashboard.showLoadingMsg();
+    ApiClient.getCurrentUserId()
+      .then(function (userId) {
+        state.currentUserId = userId;
+        return refreshUserPage(page, state);
+      })
+      .then(function () {
+        maybeResumePendingUserAuth(page, state);
+      })
+      .catch(function (error) {
+        return common.getErrorText(error).then(function (message) {
+          common.setNotice(page.querySelector('#saveStatusNotice'), 'error', message);
+        });
+      })
+      .finally(function () {
+        Dashboard.hideLoadingMsg();
+      });
+  }
+
+  function bindUserPageEvents(page, state) {
+    page.querySelector('#selectProvider').addEventListener('change', function () {
+      renderUserPage(page, state);
+    });
+
+    page.querySelector('#TemplateConfigForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      saveUserConfiguration(page, state);
+    });
+
+    page.querySelector('#authorizeDevice').addEventListener('click', function () {
+      connectUserProvider(page, state);
+    });
+
+    page.querySelector('#testAuthentication').addEventListener('click', function () {
+      testUserProvider(page, state, {});
+    });
+
+    page.querySelector('#deauthenticate').addEventListener('click', function () {
+      deauthenticateUserProvider(page, state);
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') {
+        maybeResumePendingUserAuth(page, state);
+      }
+    });
+
+    window.addEventListener('focus', function () {
+      maybeResumePendingUserAuth(page, state);
+    });
+  }
+
+  function refreshUserPage(page, state) {
+    var common = state.common;
+    var currentProvider = getSelectedUserProvider(page);
+    return Promise.all([
+      common.requestJson({ url: ApiClient.getUrl('/AniSync/user/parameters') }),
+      common.requestJson({
+        url: ApiClient.getUrl('/AniSync/user/configuration?user=' + encodeURIComponent(state.currentUserId)),
+      }),
+    ]).then(function (results) {
+      state.parameters = results[0] || {};
+      state.userConfig = normalizeUserConfiguration(results[1] || {});
+      var providerList = state.parameters.providerList || [];
+      var selectedProvider = currentProvider || getDefaultUserProvider(providerList);
+      common.setProviderSelection(page, providerList, '#selectProvider', {
+        connectedProviders: getConnectedUserProviderSet(state.userConfig),
+        selectedValue: selectedProvider,
+      });
+      renderUserPage(page, state);
+    });
+  }
+
+  function normalizeUserConfiguration(userConfig) {
+    userConfig = userConfig || {};
+    userConfig.UserApiAuth = userConfig.UserApiAuth || [];
+    userConfig.LibraryToCheck = userConfig.LibraryToCheck || [];
+    userConfig.PlanToWatchOnly = userConfig.PlanToWatchOnly === undefined ? true : userConfig.PlanToWatchOnly;
+    userConfig.RewatchCompleted = userConfig.RewatchCompleted === undefined ? true : userConfig.RewatchCompleted;
+    return userConfig;
+  }
+
+  function renderUserPage(page, state) {
+    var common = state.common;
+    var libraries = state.parameters && state.parameters.libraries ? state.parameters.libraries : [];
+    var userConfig = state.userConfig || normalizeUserConfiguration({});
+    var provider = getSelectedUserProvider(page);
+    var isKitsu = provider === 'Kitsu';
+    var auth = getUserProviderAuth(userConfig, provider);
+    var hasPending = hasPendingUserAuth(page, state);
+    var isConnected = !!auth;
+
+    page.querySelector('#PlanToWatchOnly').checked = userConfig.PlanToWatchOnly;
+    page.querySelector('#RewatchCompleted').checked = userConfig.RewatchCompleted;
+    common.renderLibraryCheckboxes(
+      page.querySelector('#libraries'),
+      libraries,
+      userConfig.LibraryToCheck,
+      'No libraries are available for your account.',
+    );
+    toggleUserElement(page.querySelector('#kitsuCredentials'), isKitsu);
+    clearUserFieldErrors(page);
+
+    page.querySelector('#connectionSummary').textContent = isConnected
+      ? 'Ani-Sync already has a stored token for this provider.'
+      : isKitsu
+        ? 'Authenticate with your Kitsu username and password to store a token for future syncs.'
+        : 'Open the provider authorization page, approve access, and return here to verify the connection.';
+    page.querySelector('#authorizeDevice span').textContent = isKitsu
+      ? 'Authenticate account'
+      : 'Open authorization page';
+    common.setStatusPill(
+      page.querySelector('#connectionStatusPill'),
+      isConnected ? 'success' : hasPending ? 'warning' : 'warning',
+      isConnected ? 'Connected' : hasPending ? 'Waiting for authorization' : 'Not connected',
+    );
+
+    if (hasPending) {
+      common.setNotice(
+        page.querySelector('#connectionNotice'),
+        'info',
+        'Authorization is in progress. Return to this tab after approving access and Ani-Sync will retest automatically.',
+      );
+    } else if (!isConnected) {
+      common.clearNotice(page.querySelector('#connectionNotice'));
+    }
+
+    if (!hasPending) {
+      hideUserAuthorizeLink(page);
+    }
+  }
+
+  function saveUserConfiguration(page, state) {
+    var common = state.common;
+    var button = page.querySelector('#saveConfigButton');
+    var payload = {
+      LibraryToCheck: Array.prototype.map.call(page.querySelectorAll('.library:checked'), function (element) {
+        return element.id;
+      }),
+      PlanToWatchOnly: page.querySelector('#PlanToWatchOnly').checked,
+      RewatchCompleted: page.querySelector('#RewatchCompleted').checked,
+    };
+
+    common.setButtonBusy(button, true, 'Saving...');
+    common.clearNotice(page.querySelector('#saveStatusNotice'));
+    common
+      .requestJson({
+        type: 'PUT',
+        url: ApiClient.getUrl('/AniSync/user/configuration?user=' + encodeURIComponent(state.currentUserId)),
+        data: JSON.stringify(payload),
+        contentType: 'application/json',
+      })
+      .then(function (userConfig) {
+        state.userConfig = normalizeUserConfiguration(userConfig || {});
+        renderUserPage(page, state);
+        common.setNotice(page.querySelector('#saveStatusNotice'), 'success', 'Preferences saved.');
+      })
+      .catch(function (error) {
+        common.getErrorText(error).then(function (message) {
+          common.setNotice(page.querySelector('#saveStatusNotice'), 'error', message);
+        });
+      })
+      .finally(function () {
+        common.setButtonBusy(button, false);
+      });
+  }
+
+  function connectUserProvider(page, state) {
+    var common = state.common;
+    var provider = getSelectedUserProvider(page);
+    var button = page.querySelector('#authorizeDevice');
+    var isKitsu = provider === 'Kitsu';
+
+    clearUserFieldErrors(page);
+    common.setButtonBusy(button, true, isKitsu ? 'Authenticating...' : 'Preparing...');
+    common.clearNotice(page.querySelector('#connectionNotice'));
+
+    var requestPromise;
+    if (isKitsu) {
+      if (!page.querySelector('#username').value) {
+        page.querySelector('#usernameError').textContent = 'Username is required.';
+        common.setButtonBusy(button, false);
+        return;
+      }
+      if (!page.querySelector('#password').value) {
+        page.querySelector('#passwordError').textContent = 'Password is required.';
+        common.setButtonBusy(button, false);
+        return;
+      }
+
+      requestPromise = common
+        .requestJson({
+          url: ApiClient.getUrl(
+            '/AniSync/user/passwordGrant?provider=Kitsu&user=' +
+              encodeURIComponent(state.currentUserId) +
+              '&username=' +
+              encodeURIComponent(page.querySelector('#username').value) +
+              '&password=' +
+              encodeURIComponent(page.querySelector('#password').value),
+          ),
+        })
+        .then(function () {
+          return refreshUserPage(page, state).then(function () {
+            common.setNotice(page.querySelector('#connectionNotice'), 'success', 'Kitsu authentication succeeded.');
+          });
+        });
+    } else {
+      requestPromise = common
+        .requestText({
+          url: ApiClient.getUrl(
+            '/AniSync/user/buildAuthorizeRequestUrl?provider=' +
+              encodeURIComponent(provider) +
+              '&user=' +
+              encodeURIComponent(state.currentUserId),
+          ),
+        })
+        .then(function (authorizeUrl) {
+          showUserAuthorizeLink(page, authorizeUrl);
+          try {
+            window.open(authorizeUrl, '_blank');
+          } catch (error) {
+            console.warn('[AniSync] Failed to open authorization page', error);
+          }
+          state.pendingAuth = { provider: provider };
+          common.setSessionValue(AniSyncUserPage.pendingAuthKey, state.pendingAuth);
+          common.setNotice(
+            page.querySelector('#connectionNotice'),
+            'info',
+            'Authorization opened in a new tab. Return here after approving access.',
+          );
+          renderUserPage(page, state);
+        });
+    }
+
+    requestPromise
+      .catch(function (error) {
+        common.getErrorText(error).then(function (message) {
+          common.setNotice(page.querySelector('#connectionNotice'), 'error', message);
+        });
+      })
+      .finally(function () {
+        common.setButtonBusy(button, false);
+      });
+  }
+
+  function testUserProvider(page, state, options) {
+    options = options || {};
+    var common = state.common;
+    var provider = getSelectedUserProvider(page);
+    var button = page.querySelector('#testAuthentication');
+
+    common.setButtonBusy(button, true, 'Testing...');
+    if (!options.suppressInfoNotice) {
+      common.setNotice(page.querySelector('#connectionNotice'), 'info', 'Checking your stored provider connection...');
+    }
+
+    common
+      .requestJson({
+        url: ApiClient.getUrl(
+          '/AniSync/user/user?apiName=' +
+            encodeURIComponent(provider) +
+            '&user=' +
+            encodeURIComponent(state.currentUserId),
+        ),
+      })
+      .then(function (response) {
+        clearPendingUserAuth(state);
+        return refreshUserPage(page, state).then(function () {
+          common.setNotice(
+            page.querySelector('#connectionNotice'),
+            'success',
+            response && response.name ? 'Connected as ' + response.name + '.' : 'Authentication succeeded.',
+          );
+        });
+      })
+      .catch(function (error) {
+        return common.getErrorText(error).then(function (message) {
+          if (options.autoRetry) {
+            common.setNotice(
+              page.querySelector('#connectionNotice'),
+              'info',
+              'Still waiting for the provider callback. If you already approved access, try again in a moment.',
+            );
+          } else {
+            common.setNotice(page.querySelector('#connectionNotice'), 'error', message);
+          }
+          throw new Error(message);
+        });
+      })
+      .finally(function () {
+        common.setButtonBusy(button, false);
+      });
+  }
+
+  function deauthenticateUserProvider(page, state) {
+    var common = state.common;
+    var provider = getSelectedUserProvider(page);
+    var button = page.querySelector('#deauthenticate');
+
+    common.setButtonBusy(button, true, 'Disconnecting...');
+    common
+      .requestVoid({
+        url: ApiClient.getUrl(
+          '/AniSync/user/deauthenticate?apiName=' +
+            encodeURIComponent(provider) +
+            '&user=' +
+            encodeURIComponent(state.currentUserId),
+        ),
+      })
+      .then(function () {
+        clearPendingUserAuth(state);
+        hideUserAuthorizeLink(page);
+        return refreshUserPage(page, state).then(function () {
+          common.setNotice(page.querySelector('#connectionNotice'), 'success', 'Provider connection removed.');
+        });
+      })
+      .catch(function (error) {
+        common.getErrorText(error).then(function (message) {
+          common.setNotice(page.querySelector('#connectionNotice'), 'error', message);
+        });
+      })
+      .finally(function () {
+        common.setButtonBusy(button, false);
+      });
+  }
+
+  function maybeResumePendingUserAuth(page, state) {
+    if (!hasPendingUserAuth(page, state)) {
+      return;
+    }
+
+    testUserProvider(page, state, {
+      autoRetry: true,
+    }).catch(function () {
+      // Keep waiting until the provider callback succeeds or the user disconnects.
+    });
+  }
+
+  function clearPendingUserAuth(state) {
+    state.pendingAuth = null;
+    state.common.removeSessionValue(AniSyncUserPage.pendingAuthKey);
+  }
+
+  function hasPendingUserAuth(page, state) {
+    return !!(state.pendingAuth && state.pendingAuth.provider === getSelectedUserProvider(page));
+  }
+
+  function getSelectedUserProvider(page) {
+    var select = page.querySelector('#selectProvider');
+    return select ? select.value : '';
+  }
+
+  function getDefaultUserProvider(providerList) {
+    return providerList && providerList.length ? providerList[0].Key : '';
+  }
+
+  function getConnectedUserProviderSet(userConfig) {
+    var set = new Set();
+    if (!userConfig || !userConfig.UserApiAuth) {
+      return set;
+    }
+
+    for (var index = 0; index < userConfig.UserApiAuth.length; index++) {
+      set.add(userConfig.UserApiAuth[index].Name);
+    }
+
+    return set;
+  }
+
+  function getUserProviderAuth(userConfig, provider) {
+    if (!userConfig || !userConfig.UserApiAuth) {
+      return null;
+    }
+
+    for (var index = 0; index < userConfig.UserApiAuth.length; index++) {
+      if (userConfig.UserApiAuth[index].Name === provider) {
+        return userConfig.UserApiAuth[index];
+      }
+    }
+
+    return null;
+  }
+
+  function toggleUserElement(element, show) {
+    if (!element) {
+      return;
+    }
+
+    if (show) {
+      element.classList.remove('aniSyncHidden');
+    } else {
+      element.classList.add('aniSyncHidden');
+    }
+  }
+
+  function clearUserFieldErrors(page) {
+    page.querySelector('#usernameError').textContent = '';
+    page.querySelector('#passwordError').textContent = '';
+  }
+
+  function showUserAuthorizeLink(page, authorizeUrl) {
+    var link = page.querySelector('#authorizeLink');
+    link.href = authorizeUrl;
+    link.classList.remove('aniSyncHidden');
+  }
+
+  function hideUserAuthorizeLink(page) {
+    var link = page.querySelector('#authorizeLink');
+    link.removeAttribute('href');
+    link.classList.add('aniSyncHidden');
+  }
+
+  var generalFunctionsUrl = ApiClient.getUrl('web/ConfigurationPage', { name: 'AniSync_CommonJs' });
+  require([generalFunctionsUrl], function (common) {
+    initializeUserPage(common);
+  });
+</script>
