@@ -45,12 +45,18 @@ jobs:
       - name: Test
         run: dotnet test --no-build --configuration Release
 
+      - name: Stage release artifact
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          mkdir -p artifact
+          cp emby-ani-sync/bin/Release/netstandard2.0/emby-ani-sync.dll artifact/
+
       - name: Upload release artifact
         if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: emby-ani-sync
-          path: emby-ani-sync/bin/Release/netstandard2.0/emby-ani-sync.dll
+          path: artifact/emby-ani-sync.dll
 
   release:
     if: startsWith(github.ref, 'refs/tags/v')
